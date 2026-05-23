@@ -1,5 +1,7 @@
 # Document Intelligence Assistant
 
+This project was developed as part of an AI TDP hands-on initiative to demonstrate practical understanding of RAG, LangChain, embeddings, vector databases, and LLM orchestration.
+
 An interview-ready, end-to-end Retrieval-Augmented Generation (RAG) application built with LangChain, ChromaDB, and Streamlit. This project allows users to upload PDF documents and query them using an LLM, generating answers based strictly on the provided context.
 
 ## Problem Statement
@@ -37,14 +39,14 @@ graph TD
 - **LLM**: Groq (`llama-3.1-8b-instant`) for fast inference
 - **Embeddings**: HuggingFace (`all-MiniLM-L6-v2`) via `sentence-transformers`
 - **Vector Database**: ChromaDB (local persistence)
-- **Document Processing**: PyPDF
+- **Document Processing**: PyPDFLoader (LangChain)
 
 ## Setup Instructions
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository_url>
-   cd <repository_folder>
+   git clone https://github.com/Pradhuman0012/Document-Intelligence-Assistant.git
+   cd Document-Intelligence-Assistant
    ```
 
 2. **Create a virtual environment:**
