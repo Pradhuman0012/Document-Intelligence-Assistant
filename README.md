@@ -14,6 +14,8 @@ Finding specific information across multiple large PDF documents is time-consumi
 - **Transparent Retrieval (Debug Mode)**: Users can expand a section to see the exact chunks of text retrieved by the vector database, complete with their metadata.
 - **Performance Metrics**: View response times and the number of chunks retrieved for each query.
 - **Chat History**: Maintains session state for a conversational experience.
+- **Semantic Routing**: Intelligently routes queries to the Knowledge Base, a Web Search Tool, or a Math Calculator based on intent.
+- **Document Quick Actions**: One-click buttons to summarize documents, extract key points, or generate FAQs.
 
 ## Architecture
 
@@ -24,13 +26,27 @@ graph TD
     C -->|Create Chunks| D[Embeddings Model]
     D -->|Vectors| E[(ChromaDB)]
     
-    A -->|Ask Question| F[RAG Service]
-    F -->|Query| D
+    A -->|Submit Query| Router{Semantic Router}
+    
+    Router -->|MATH_QUERY| Calc[Calculator Tool]
+    Router -->|WEB_SEARCH| Web[Web Search Tool]
+    Router -->|SUMMARIZE| Sum[Summarization Tool]
+    Router -->|DOCUMENT_QUERY| F[RAG Service]
+    
+    Calc -->|numexpr eval| Ans[Return Answer]
+    
+    Web -->|DuckDuckGo Search| G[Groq LLM]
+    
+    Sum -->|Fetch All Documents| E
+    Sum --> G
+    
+    F -->|Vector Search| D
     D -->|Query Vector| E
     E -->|Retrieve Top K Chunks| F
-    F -->|Construct Prompt| G[Groq LLM]
-    G -->|Generate Answer| F
-    F -->|Return Answer + Metadata| A
+    F -->|Construct Prompt| G
+    
+    G -->|Generate Answer| Ans
+    Ans -->|Return Answer + Metadata| A
 ```
 
 ## Tech Stack
@@ -40,6 +56,7 @@ graph TD
 - **Embeddings**: HuggingFace (`all-MiniLM-L6-v2`) via `sentence-transformers`
 - **Vector Database**: ChromaDB (local persistence)
 - **Document Processing**: PyPDFLoader (LangChain)
+- **External Tools**: `duckduckgo-search` (Web Search) and `numexpr` (Safe Math Evaluation)
 
 ## Setup Instructions
 
@@ -91,9 +108,11 @@ graph TD
 
 ## Example Questions
 Upload a document (e.g., an employee handbook or technical manual) and ask:
-- *"What is the policy on remote work according to page 4?"*
-- *"Summarize the main steps for troubleshooting the network module."*
-- *"What is the capital of France?"* (If not in the document, the app will correctly state it cannot find the answer).
+- *"What is the policy on remote work according to page 4?"* (Routes to Knowledge Base)
+- *"Summarize the main steps for troubleshooting the network module."* (Routes to Summarizer)
+- *"What is 15% of 15000?"* (Routes to Calculator Tool)
+- *"Who won the world cup in 2022?"* (Routes to Web Search Tool)
+- *"Compare this remote work policy with current industry practices."* (Uses Knowledge Base + LLM external knowledge)
 
 ## Interview Guide: Refactoring Process & Decisions
 
@@ -109,6 +128,7 @@ Upload a document (e.g., an employee handbook or technical manual) and ask:
 - **UI/UX**: Replaced the rudimentary inputs with a full chat interface using Streamlit's `st.chat_message` and session state.
 
 ### New Features Added
+- **Semantic Routing & Tools**: Added multi-tool support (Web Search, Calculator, Summarizer) without the unpredictability of a monolithic Agent. A zero-shot semantic router categorizes intent to trigger the correct path, ensuring the RAG pipeline remains intact.
 - **Citations & Metadata**: Added extraction and propagation of `source` and `page` metadata through the chunking and retrieval process, surfacing them in the UI.
 - **Debug Expander**: Added an expandable section to inspect raw retrieved chunks.
 - **Performance Tracking**: Added a `@time_it` decorator to measure inference speed.
