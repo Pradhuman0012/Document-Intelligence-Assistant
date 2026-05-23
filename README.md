@@ -70,6 +70,23 @@ graph TD
    streamlit run app.py
    ```
 
+
+## Screenshots
+
+### Home Screen
+
+![Home Screen](screenshots/home-screen.png)
+
+### Question Answering
+
+![Q&A](screenshots/qa-response.png)
+
+### Source Citations & Retrieved Context
+
+![Sources](screenshots/source-citations.png)
+
+
+
 ## Example Questions
 Upload a document (e.g., an employee handbook or technical manual) and ask:
 - *"What is the policy on remote work according to page 4?"*
