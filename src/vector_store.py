@@ -8,10 +8,7 @@ from .config import EMBEDDING_MODEL_NAME
 PERSIST_DIRECTORY = os.path.join(os.path.dirname(os.path.dirname(__file__)), "chroma_db")
 
 def get_embeddings_model():
-    return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL_NAME,
-        model_kwargs={'local_files_only': True}
-    )
+    return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
 
 def get_vector_store() -> Chroma:
     """
