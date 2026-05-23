@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Streamlit
+.streamlit/
+
+# Vector DB
+chroma_db/
+*.sqlite3
+
+# Project files
+.DS_Store
+.ipynb_checkpoints
+extracted_code.py
