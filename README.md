@@ -82,7 +82,7 @@ graph TD
 ### Question Answering
 
 ![Q&A](screenshots/qa-response.png)
-
+![Q&A](screenshots/qa-response 2.png)
 ### Source Citations & Retrieved Context
 
 ![Sources](screenshots/source-citations.png)
